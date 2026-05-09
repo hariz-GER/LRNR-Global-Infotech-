@@ -1,4 +1,5 @@
-import { ChevronLeft, ChevronsLeft, FilePlus2, FolderPlus, Plus } from 'lucide-react'
+import { ChevronLeft, ChevronsLeft, Plus } from 'lucide-react'
+import { TREE_ROOT_ACTIONS } from '../../constants/authoring'
 import { useAuthoringStore } from '../../store/useAuthoringStore'
 import { TreeItem } from './TreeItem'
 
@@ -11,24 +12,23 @@ export function TreePanel() {
       <div className="tree-heading">
         <span>DFIN</span>
         <div className="tree-heading-actions">
-          <button
-            className="icon-button tiny has-tooltip"
-            type="button"
-            onClick={() => addNode(null, 'container')}
-            aria-label="Create root container"
-            data-tooltip="Create container"
-          >
-            <FolderPlus size={16} />
-          </button>
-          <button
-            className="icon-button tiny has-tooltip"
-            type="button"
-            onClick={() => addNode(null, 'leaf')}
-            aria-label="Create root item"
-            data-tooltip="Create item"
-          >
-            <FilePlus2 size={16} />
-          </button>
+          {TREE_ROOT_ACTIONS.map((action) => {
+            const Icon = action.icon
+
+            return (
+              <button
+                className="icon-button tiny has-tooltip"
+                key={action.type}
+                type="button"
+                onClick={() => addNode(null, action.type)}
+                aria-label={action.label}
+                data-tooltip={action.label}
+                title={action.label}
+              >
+                <Icon size={16} />
+              </button>
+            )
+          })}
           <button className="icon-button tiny" type="button" aria-label="Expand workspace">
             <ChevronLeft size={16} />
           </button>

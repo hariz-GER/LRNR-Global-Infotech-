@@ -1,27 +1,23 @@
 import {
   Bell,
   ChevronDown,
-  Grid2X2,
-  ListTree,
   Menu,
   Moon,
   Search,
+  Sun,
   UserPlus,
 } from 'lucide-react'
+import { VIEW_MODES } from '../../constants/authoring'
 import { useAuthoringStore } from '../../store/useAuthoringStore'
-
-const modes = [
-  { id: 'all', label: 'All' },
-  { id: 'board', label: 'Board' },
-  { id: 'graph', label: 'Graph' },
-  { id: 'recent', label: 'Recent' },
-] as const
 
 export function TopBar() {
   const isDrawerOpen = useAuthoringStore((state) => state.isDrawerOpen)
   const toggleDrawer = useAuthoringStore((state) => state.toggleDrawer)
   const viewMode = useAuthoringStore((state) => state.viewMode)
   const setViewMode = useAuthoringStore((state) => state.setViewMode)
+  const theme = useAuthoringStore((state) => state.theme)
+  const toggleTheme = useAuthoringStore((state) => state.toggleTheme)
+  const isDark = theme === 'dark'
 
   return (
     <header className="topbar">
@@ -51,12 +47,17 @@ export function TopBar() {
             <ChevronDown size={14} />
           </button>
           <div className="profile-popover">
-            <label className="popover-row">
+            <button
+              className="popover-row theme-row"
+              type="button"
+              onClick={toggleTheme}
+              aria-pressed={isDark}
+            >
               <span>Dark mode</span>
-              <span className="toggle">
-                <Moon size={13} />
+              <span className={`toggle ${isDark ? 'on' : ''}`}>
+                {isDark ? <Sun size={13} /> : <Moon size={13} />}
               </span>
-            </label>
+            </button>
             <button type="button">Profile</button>
             <button className="selected" type="button">
               What's new
@@ -70,17 +71,21 @@ export function TopBar() {
       </div>
 
       <nav className="view-tabs" aria-label="Item render options">
-        {modes.map((mode) => (
-          <button
-            className={viewMode === mode.id ? 'active' : ''}
-            key={mode.id}
-            type="button"
-            onClick={() => setViewMode(mode.id)}
-          >
-            {mode.id === 'graph' ? <Grid2X2 size={15} /> : <ListTree size={15} />}
-            {mode.label}
-          </button>
-        ))}
+        {VIEW_MODES.map((mode) => {
+          const Icon = mode.icon
+
+          return (
+            <button
+              className={viewMode === mode.id ? 'active' : ''}
+              key={mode.id}
+              type="button"
+              onClick={() => setViewMode(mode.id)}
+            >
+              <Icon size={15} />
+              {mode.label}
+            </button>
+          )
+        })}
       </nav>
 
       {isDrawerOpen ? (

@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useState, type CSSProperties } from 'react'
 import { ChevronRight, FileText, Folder, FolderPlus, MoreVertical, Plus, Trash2 } from 'lucide-react'
 import { useAuthoringStore } from '../../store/useAuthoringStore'
 import type { TreeNode } from '../../types/node'
@@ -21,7 +21,7 @@ function TreeItemComponent({ node, depth }: TreeItemProps) {
     <div className="tree-item-group">
       <div
         className={`tree-item ${activeNodeId === node.id ? 'active' : ''}`}
-        style={{ '--depth': depth } as React.CSSProperties}
+        style={{ '--depth': depth } as CSSProperties}
       >
         <button
           className="tree-label"
@@ -51,18 +51,26 @@ function TreeItemComponent({ node, depth }: TreeItemProps) {
               <button
                 className="icon-button tiny has-tooltip"
                 type="button"
-                onClick={() => addNode(node.id, 'leaf')}
+                onClick={() => {
+                  setIsOpen(true)
+                  addNode(node.id, 'leaf')
+                }}
                 aria-label={`Add item to ${node.label}`}
                 data-tooltip="Create item"
+                title="Create item"
               >
                 <Plus size={15} />
               </button>
               <button
                 className="icon-button tiny has-tooltip"
                 type="button"
-                onClick={() => addNode(node.id, 'container')}
+                onClick={() => {
+                  setIsOpen(true)
+                  addNode(node.id, 'container')
+                }}
                 aria-label={`Add container to ${node.label}`}
                 data-tooltip="Create container"
+                title="Create container"
               >
                 <FolderPlus size={15} />
               </button>
@@ -71,9 +79,16 @@ function TreeItemComponent({ node, depth }: TreeItemProps) {
           <button
             className="icon-button tiny has-tooltip"
             type="button"
-            onClick={() => deleteNode(node.id)}
+            onClick={() => {
+              const shouldDelete = window.confirm(`Delete "${node.label}" and any nested content?`)
+
+              if (shouldDelete) {
+                deleteNode(node.id)
+              }
+            }}
             aria-label={`Delete ${node.label}`}
             data-tooltip="Remove"
+            title="Remove"
           >
             <Trash2 size={15} />
           </button>
