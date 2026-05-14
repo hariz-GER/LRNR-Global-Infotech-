@@ -17,6 +17,14 @@ function TreeItemComponent({ node, depth }: TreeItemProps) {
   const isContainer = node.type === 'container'
   const hasChildren = Boolean(node.children?.length)
 
+  const handleLabelClick = () => {
+    setActiveNode(node.id)
+
+    if (isContainer && hasChildren) {
+      setIsOpen((value) => !value)
+    }
+  }
+
   return (
     <div className="tree-item-group">
       <div
@@ -26,18 +34,12 @@ function TreeItemComponent({ node, depth }: TreeItemProps) {
         <button
           className="tree-label"
           type="button"
-          onClick={() => setActiveNode(node.id)}
+          onClick={handleLabelClick}
           aria-current={activeNodeId === node.id ? 'page' : undefined}
+          aria-expanded={isContainer && hasChildren ? isOpen : undefined}
         >
           {isContainer ? (
-            <ChevronRight
-              className={isOpen ? 'expanded' : ''}
-              size={14}
-              onClick={(event) => {
-                event.stopPropagation()
-                setIsOpen((value) => !value)
-              }}
-            />
+            <ChevronRight className={isOpen ? 'expanded' : ''} size={14} />
           ) : (
             <span className="tree-indent" />
           )}
@@ -98,11 +100,13 @@ function TreeItemComponent({ node, depth }: TreeItemProps) {
         </div>
       </div>
 
-      {isOpen && hasChildren ? (
-        <div>
-          {node.children?.map((child) => (
-            <TreeItem key={child.id} node={child} depth={depth + 1} />
-          ))}
+      {hasChildren ? (
+        <div className={`tree-children ${isOpen ? 'open' : ''}`} aria-hidden={!isOpen}>
+          <div className="tree-children-inner">
+            {node.children?.map((child) => (
+              <TreeItem key={child.id} node={child} depth={depth + 1} />
+            ))}
+          </div>
         </div>
       ) : null}
     </div>

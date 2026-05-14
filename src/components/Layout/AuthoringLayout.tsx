@@ -16,6 +16,10 @@ export function AuthoringLayout() {
     }
 
     const closeTreePanelOnOutsideClick = (event: PointerEvent) => {
+      if (!window.matchMedia('(max-width: 900px)').matches) {
+        return
+      }
+
       const target = event.target
 
       if (target instanceof Node && !treePanelRef.current?.contains(target)) {

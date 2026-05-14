@@ -28,7 +28,7 @@ export function TopBar() {
 
         <label className="search-field" aria-label="Search items">
           <Search size={18} />
-          <input placeholder="dfin" />
+          <input placeholder="Search content" />
         </label>
 
         <div className="topbar-spacer" />

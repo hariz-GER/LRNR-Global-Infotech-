@@ -27,7 +27,9 @@ export function RichTextEditor() {
   const pendingSaveRef = useRef<number | null>(null)
   const activeNodeIdRef = useRef(activeNodeId)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const widgetStripRef = useRef<HTMLDivElement | null>(null)
   const mediaKindRef = useRef<MediaKind>('image')
+  const [isWidgetMenuOpen, setIsWidgetMenuOpen] = useState(false)
 
   const saveBody = useCallback(
     (nodeId: string, body: string) => {
@@ -84,6 +86,26 @@ export function RichTextEditor() {
   }, [])
 
   useEffect(() => {
+    if (!isWidgetMenuOpen) {
+      return undefined
+    }
+
+    const closeWidgetMenuOnOutsideClick = (event: PointerEvent) => {
+      const target = event.target
+
+      if (target instanceof Node && !widgetStripRef.current?.contains(target)) {
+        setIsWidgetMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', closeWidgetMenuOnOutsideClick)
+
+    return () => {
+      document.removeEventListener('pointerdown', closeWidgetMenuOnOutsideClick)
+    }
+  }, [isWidgetMenuOpen])
+
+  useEffect(() => {
     if (!editor || !activeNode) {
       return
     }
@@ -100,6 +122,7 @@ export function RichTextEditor() {
 
   const pickMedia = (kind: MediaKind) => {
     mediaKindRef.current = kind
+    setIsWidgetMenuOpen(false)
     fileInputRef.current?.click()
   }
 
@@ -128,6 +151,7 @@ export function RichTextEditor() {
       .focus()
       .insertContent('<blockquote><p><strong>Assessment item</strong>: add prompt, options, and feedback.</p></blockquote>')
       .run()
+    setIsWidgetMenuOpen(false)
   }
 
   if (!activeNode) {
@@ -170,10 +194,16 @@ export function RichTextEditor() {
         }}
       />
 
-      <div className="widget-strip">
-        <div className="widget-add">
+      <div className={`widget-strip ${isWidgetMenuOpen ? 'open' : ''}`} ref={widgetStripRef}>
+        <button
+          className="widget-add"
+          type="button"
+          onClick={() => setIsWidgetMenuOpen((value) => !value)}
+          aria-label="Add editor content"
+          aria-expanded={isWidgetMenuOpen}
+        >
           <CirclePlus size={21} />
-        </div>
+        </button>
         <div className="widget-menu" aria-label="Add editor content">
           {MEDIA_WIDGETS.map((widget) => {
             const Icon = widget.icon

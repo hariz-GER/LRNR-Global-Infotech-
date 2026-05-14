@@ -18,7 +18,10 @@ export const TreePanel = forwardRef<HTMLElement, TreePanelProps>(function TreePa
   return (
     <aside className="tree-panel" ref={ref}>
       <div className="tree-heading">
-        <span>DFIN</span>
+        <div>
+          <span>DFIN</span>
+          <strong>Course outline</strong>
+        </div>
         <div className="tree-heading-actions">
           {TREE_ROOT_ACTIONS.map((action) => {
             const Icon = action.icon
