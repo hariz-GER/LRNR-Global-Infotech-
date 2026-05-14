@@ -1,14 +1,22 @@
+import { forwardRef } from 'react'
 import { ChevronLeft, ChevronsLeft, Plus } from 'lucide-react'
 import { TREE_ROOT_ACTIONS } from '../../constants/authoring'
 import { useAuthoringStore } from '../../store/useAuthoringStore'
 import { TreeItem } from './TreeItem'
 
-export function TreePanel() {
+type TreePanelProps = {
+  onClose: () => void
+}
+
+export const TreePanel = forwardRef<HTMLElement, TreePanelProps>(function TreePanel(
+  { onClose },
+  ref,
+) {
   const tree = useAuthoringStore((state) => state.tree)
   const addNode = useAuthoringStore((state) => state.addNode)
 
   return (
-    <aside className="tree-panel">
+    <aside className="tree-panel" ref={ref}>
       <div className="tree-heading">
         <span>DFIN</span>
         <div className="tree-heading-actions">
@@ -32,7 +40,12 @@ export function TreePanel() {
           <button className="icon-button tiny" type="button" aria-label="Expand workspace">
             <ChevronLeft size={16} />
           </button>
-          <button className="icon-button tiny" type="button" aria-label="Collapse workspace">
+          <button
+            className="icon-button tiny"
+            type="button"
+            onClick={onClose}
+            aria-label="Collapse workspace"
+          >
             <ChevronsLeft size={16} />
           </button>
         </div>
@@ -49,4 +62,4 @@ export function TreePanel() {
       </button>
     </aside>
   )
-}
+})

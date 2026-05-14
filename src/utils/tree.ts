@@ -65,6 +65,8 @@ export const initialTree: TreeNode[] = [
       },
     ],
   },
+
+  
   {
     id: 'collection-2',
     label: 'collection.2',
