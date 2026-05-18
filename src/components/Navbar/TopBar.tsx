@@ -1,10 +1,16 @@
 import {
   Bell,
   ChevronDown,
+  HelpCircle,
+  Keyboard,
+  LogOut,
   Menu,
+  MessageSquareText,
   Moon,
   Search,
+  Sparkles,
   Sun,
+  User,
   UserPlus,
 } from 'lucide-react'
 import { VIEW_MODES } from '../../constants/authoring'
@@ -47,6 +53,13 @@ export function TopBar() {
             <ChevronDown size={14} />
           </button>
           <div className="profile-popover">
+            <div className="profile-card">
+              <span className="profile-card-avatar">FL</span>
+              <div>
+                <strong>Fathima Lal</strong>
+                <span>Course creator</span>
+              </div>
+            </div>
             <button
               className="popover-row theme-row"
               type="button"
@@ -58,14 +71,43 @@ export function TopBar() {
                 {isDark ? <Sun size={13} /> : <Moon size={13} />}
               </span>
             </button>
-            <button type="button">Profile</button>
-            <button className="selected" type="button">
-              What's new
+            <button type="button">
+              <span className="popover-label">
+                <User size={16} />
+                Profile
+              </span>
             </button>
-            <button type="button">Help</button>
-            <button type="button">Send feedback</button>
-            <button type="button">Hints and shortcuts</button>
-            <button type="button">Log out</button>
+            <button className="selected" type="button">
+              <span className="popover-label">
+                <Sparkles size={16} />
+                What's new
+              </span>
+              <span className="new-pill">New</span>
+            </button>
+            <button type="button">
+              <span className="popover-label">
+                <HelpCircle size={16} />
+                Help
+              </span>
+            </button>
+            <button type="button">
+              <span className="popover-label">
+                <MessageSquareText size={16} />
+                Send feedback
+              </span>
+            </button>
+            <button type="button">
+              <span className="popover-label">
+                <Keyboard size={16} />
+                Hints and shortcuts
+              </span>
+            </button>
+            <button className="logout-row" type="button">
+              <span className="popover-label">
+                <LogOut size={16} />
+                Log out
+              </span>
+            </button>
           </div>
         </div>
       </div>
