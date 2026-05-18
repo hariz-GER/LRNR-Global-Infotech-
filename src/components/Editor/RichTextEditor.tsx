@@ -166,8 +166,8 @@ export function RichTextEditor() {
   return (
     <main className="editor-shell">
       <div className="editor-meta">
-        <span>collection.1 / collection.1.1 / {activeNode.label}</span>
-        <button type="button">Add item member</button>
+        <span>Course outline / {activeNode.label}</span>
+        <button type="button">Assign reviewer</button>
       </div>
 
       <TitleInput key={activeNode.id} nodeId={activeNode.id} title={activeNode.content.title} />
