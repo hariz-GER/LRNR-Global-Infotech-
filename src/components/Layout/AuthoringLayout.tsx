@@ -89,6 +89,7 @@ function LoginScreen() {
       <form className="login-card" onSubmit={submitLogin}>
         <span className="login-icon">
           <LockKeyhole size={22} />
+          <span aria-hidden="true" />
         </span>
         <div>
           <span className="login-eyebrow">DFIN authoring</span>
