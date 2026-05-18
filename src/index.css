@@ -124,37 +124,72 @@ input:focus-visible,
 }
 
 .search-field {
-  width: min(280px, 38vw);
-  min-height: 40px;
-  color: #8f8894;
+  width: min(310px, 38vw);
+  min-height: 42px;
+  color: #8b8490;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 13px;
-  background: #f5f7fb;
-  border: 1px solid #ebeef4;
-  border-radius: 8px;
+  padding: 0 14px 0 11px;
+  background:
+    linear-gradient(#f8f9fd, #f8f9fd) padding-box,
+    linear-gradient(135deg, rgba(224, 82, 105, 0.22), rgba(85, 104, 240, 0.18)) border-box;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 8px 22px rgba(31, 28, 37, 0.04);
   transition:
     background 140ms ease,
     border-color 140ms ease,
-    box-shadow 140ms ease;
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+.search-field svg {
+  width: 26px;
+  height: 26px;
+  padding: 5px;
+  border-radius: 999px;
+  color: #e05269;
+  background: #ffffff;
+  box-shadow: 0 5px 14px rgba(224, 82, 105, 0.14);
+  flex: 0 0 auto;
 }
 
 .search-field:focus-within {
-  background: #ffffff;
-  border-color: rgba(224, 82, 105, 0.42);
-  box-shadow: 0 0 0 3px rgba(224, 82, 105, 0.12);
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(135deg, rgba(224, 82, 105, 0.74), rgba(85, 104, 240, 0.56)) border-box;
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 4px rgba(224, 82, 105, 0.1),
+    0 12px 28px rgba(31, 28, 37, 0.08);
 }
 
 .app-shell[data-theme='dark'] .search-field {
-  background: #22252c;
-  border-color: #343842;
+  background:
+    linear-gradient(#22252c, #22252c) padding-box,
+    linear-gradient(135deg, rgba(255, 102, 123, 0.28), rgba(124, 140, 255, 0.22)) border-box;
   color: #b5bac5;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 22px rgba(0, 0, 0, 0.16);
+}
+
+.app-shell[data-theme='dark'] .search-field svg {
+  color: #ff667b;
+  background: #191b20;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.22);
 }
 
 .app-shell[data-theme='dark'] .search-field:focus-within {
-  background: #1c1e24;
-  border-color: rgba(255, 102, 123, 0.5);
+  background:
+    linear-gradient(#1c1e24, #1c1e24) padding-box,
+    linear-gradient(135deg, rgba(255, 102, 123, 0.7), rgba(124, 140, 255, 0.56)) border-box;
+  box-shadow:
+    0 0 0 4px rgba(255, 102, 123, 0.1),
+    0 12px 28px rgba(0, 0, 0, 0.24);
 }
 
 .search-field input {
@@ -167,7 +202,7 @@ input:focus-visible,
 }
 
 .search-field input::placeholder {
-  color: #c6c4ca;
+  color: #b9b5bd;
 }
 
 .topbar-spacer {
