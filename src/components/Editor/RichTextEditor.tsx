@@ -11,6 +11,8 @@ import { MediaNode } from './MediaExtension'
 
 type MediaKind = 'image' | 'video'
 
+const REVIEWERS = ['Anika Rao', 'Puneet Sharma', 'Design Review Team']
+
 const readFileAsDataUrl = (file: File) =>
   new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
@@ -30,6 +32,8 @@ export function RichTextEditor() {
   const widgetStripRef = useRef<HTMLDivElement | null>(null)
   const mediaKindRef = useRef<MediaKind>('image')
   const [isWidgetMenuOpen, setIsWidgetMenuOpen] = useState(false)
+  const [isReviewerMenuOpen, setIsReviewerMenuOpen] = useState(false)
+  const [reviewer, setReviewer] = useState('')
 
   const saveBody = useCallback(
     (nodeId: string, body: string) => {
@@ -167,7 +171,31 @@ export function RichTextEditor() {
     <main className="editor-shell">
       <div className="editor-meta">
         <span>Course outline / {activeNode.label}</span>
-        <button type="button">Assign reviewer</button>
+        <div className="reviewer-action">
+          <button
+            type="button"
+            onClick={() => setIsReviewerMenuOpen((value) => !value)}
+            aria-expanded={isReviewerMenuOpen}
+          >
+            {reviewer ? `Reviewer: ${reviewer}` : 'Assign reviewer'}
+          </button>
+          {isReviewerMenuOpen ? (
+            <div className="reviewer-menu">
+              {REVIEWERS.map((name) => (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => {
+                    setReviewer(name)
+                    setIsReviewerMenuOpen(false)
+                  }}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <TitleInput key={activeNode.id} nodeId={activeNode.id} title={activeNode.content.title} />

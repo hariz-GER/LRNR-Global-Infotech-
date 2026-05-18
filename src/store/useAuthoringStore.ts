@@ -15,8 +15,13 @@ type AuthoringState = {
   tree: TreeNode[]
   activeNodeId: string | null
   isDrawerOpen: boolean
+  isAuthenticated: boolean
+  userName: string
+  userEmail: string
   theme: 'light' | 'dark'
   viewMode: 'all' | 'board' | 'graph' | 'recent'
+  login: (email: string, password: string) => boolean
+  logout: () => void
   setActiveNode: (id: string) => void
   setViewMode: (mode: AuthoringState['viewMode']) => void
   toggleDrawer: () => void
@@ -32,13 +37,40 @@ const savedTheme =
   typeof localStorage !== 'undefined' && localStorage.getItem('authoring-theme') === 'dark'
     ? 'dark'
     : 'light'
+const savedSession =
+  typeof localStorage !== 'undefined' ? localStorage.getItem('authoring-session') : null
+const parsedSession = savedSession ? JSON.parse(savedSession) as { name?: string; email?: string } : null
 
 export const useAuthoringStore = create<AuthoringState>((set, get) => ({
   tree,
   activeNodeId: firstNodeId(tree),
   isDrawerOpen: false,
+  isAuthenticated: Boolean(parsedSession?.email),
+  userName: parsedSession?.name ?? 'Fathima Lal',
+  userEmail: parsedSession?.email ?? 'fathima.lal@example.com',
   theme: savedTheme,
   viewMode: 'all',
+  login: (email, password) => {
+    if (!email.trim() || !password.trim()) {
+      return false
+    }
+
+    const normalizedEmail = email.trim()
+    const [namePart] = normalizedEmail.split('@')
+    const name = namePart
+      .split(/[._-]/)
+      .filter(Boolean)
+      .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+      .join(' ') || 'Course Creator'
+
+    localStorage.setItem('authoring-session', JSON.stringify({ name, email: normalizedEmail }))
+    set({ isAuthenticated: true, userName: name, userEmail: normalizedEmail })
+    return true
+  },
+  logout: () => {
+    localStorage.removeItem('authoring-session')
+    set({ isAuthenticated: false, isDrawerOpen: false })
+  },
   setActiveNode: (id) => set({ activeNodeId: id }),
   setViewMode: (mode) => set({ viewMode: mode }),
   toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),

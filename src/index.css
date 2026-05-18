@@ -48,6 +48,134 @@ button {
   color: #e5e7eb;
 }
 
+.login-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: #f4f6f8;
+}
+
+.app-shell[data-theme='dark'] .login-screen {
+  background: #111827;
+}
+
+.login-card {
+  width: min(430px, 100%);
+  display: grid;
+  gap: 18px;
+  border: 1px solid #dfe4ea;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.12);
+  padding: 30px;
+}
+
+.app-shell[data-theme='dark'] .login-card {
+  background: #172033;
+  border-color: #334155;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+}
+
+.login-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #eaf2ff;
+  color: #1d4ed8;
+}
+
+.app-shell[data-theme='dark'] .login-icon {
+  background: #1e3a5f;
+  color: #bfdbfe;
+}
+
+.login-eyebrow {
+  color: #697586;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.login-card h1 {
+  margin: 7px 0 8px;
+  color: #172033;
+  font-size: 30px;
+  line-height: 1.15;
+}
+
+.app-shell[data-theme='dark'] .login-card h1 {
+  color: #ffffff;
+}
+
+.login-card p {
+  margin: 0;
+  color: #5b6776;
+  line-height: 1.55;
+}
+
+.app-shell[data-theme='dark'] .login-card p {
+  color: #cbd5e1;
+}
+
+.login-card label {
+  display: grid;
+  gap: 7px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.app-shell[data-theme='dark'] .login-card label {
+  color: #d7dee8;
+}
+
+.login-card input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #cfd7e2;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #172033;
+  padding: 0 12px;
+  outline: 0;
+}
+
+.login-card input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.app-shell[data-theme='dark'] .login-card input {
+  background: #111827;
+  border-color: #334155;
+  color: #e5e7eb;
+}
+
+.login-error {
+  color: #b91c1c !important;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.login-card button {
+  min-height: 42px;
+  border: 1px solid #1d4ed8;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 0 14px;
+  font-weight: 750;
+}
+
+.login-card button:hover {
+  background: #1d4ed8;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -609,7 +737,8 @@ input:focus-visible,
 }
 
 .panel-list,
-.shortcut-list {
+.shortcut-list,
+.module-card-list {
   display: grid;
   gap: 10px;
   margin: 16px 0 0;
@@ -625,6 +754,61 @@ input:focus-visible,
   gap: 10px;
   color: #334155;
   line-height: 1.45;
+}
+
+.module-card-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 12px;
+  align-items: center;
+  border: 1px solid #dfe4ea;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.module-card-list strong {
+  color: #172033;
+  font-size: 14px;
+}
+
+.module-card-list span {
+  color: #697586;
+  font-size: 13px;
+}
+
+.module-card-list button {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  min-height: 32px;
+  border: 1px solid #c7dbff;
+  border-radius: 6px;
+  background: #eaf2ff;
+  color: #1d4ed8;
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.module-card-list button:hover {
+  background: #dbeafe;
+}
+
+.app-shell[data-theme='dark'] .module-card-list li {
+  border-color: #334155;
+}
+
+.app-shell[data-theme='dark'] .module-card-list strong {
+  color: #ffffff;
+}
+
+.app-shell[data-theme='dark'] .module-card-list span {
+  color: #aeb8c7;
+}
+
+.app-shell[data-theme='dark'] .module-card-list button {
+  background: #1e3a5f;
+  border-color: #2f5f9c;
+  color: #dbeafe;
 }
 
 .app-shell[data-theme='dark'] .panel-list li,
@@ -1167,6 +1351,56 @@ kbd {
 
 .app-shell[data-theme='dark'] .editor-meta {
   color: #aeb8c7;
+}
+
+.reviewer-action {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.reviewer-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 25;
+  width: 220px;
+  display: grid;
+  gap: 4px;
+  border: 1px solid #dfe4ea;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.14);
+  padding: 8px;
+}
+
+.reviewer-menu button {
+  width: 100%;
+  justify-content: flex-start;
+  border: 0;
+  background: transparent;
+  color: #334155;
+  text-align: left;
+}
+
+.reviewer-menu button:hover {
+  background: #eef2f6;
+  border-color: transparent;
+}
+
+.app-shell[data-theme='dark'] .reviewer-menu {
+  background: #172033;
+  border-color: #334155;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.28);
+}
+
+.app-shell[data-theme='dark'] .reviewer-menu button {
+  background: transparent;
+  color: #d7dee8;
+}
+
+.app-shell[data-theme='dark'] .reviewer-menu button:hover {
+  background: #263244;
+  color: #ffffff;
 }
 
 .title-input {

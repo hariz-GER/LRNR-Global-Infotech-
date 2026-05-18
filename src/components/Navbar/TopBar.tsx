@@ -28,6 +28,10 @@ type ActionPanel =
   | 'feedback'
   | 'shortcuts'
   | 'logout'
+  | 'authoring'
+  | 'review'
+  | 'published'
+  | 'assets'
   | null
 
 const flattenTree = (nodes: TreeNode[]): TreeNode[] =>
@@ -49,8 +53,17 @@ export function TopBar() {
   const setViewMode = useAuthoringStore((state) => state.setViewMode)
   const theme = useAuthoringStore((state) => state.theme)
   const toggleTheme = useAuthoringStore((state) => state.toggleTheme)
+  const userName = useAuthoringStore((state) => state.userName)
+  const userEmail = useAuthoringStore((state) => state.userEmail)
+  const logout = useAuthoringStore((state) => state.logout)
   const isDark = theme === 'dark'
   const searchableNodes = useMemo(() => flattenTree(tree), [tree])
+  const userInitials = userName
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join('') || 'U'
 
   const showToast = (message: string) => {
     setToast(message)
@@ -59,6 +72,11 @@ export function TopBar() {
   const openPanel = (panel: Exclude<ActionPanel, null>) => {
     setActivePanel(panel)
     setIsProfileMenuOpen(false)
+  }
+
+  const openModulePanel = (panel: Exclude<ActionPanel, null>) => {
+    openPanel(panel)
+    toggleDrawer()
   }
 
   const closePanel = () => {
@@ -123,12 +141,20 @@ export function TopBar() {
   const submitInvite = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (!inviteEmail.trim()) {
+    const email = inviteEmail.trim()
+
+    if (!email) {
       showToast('Enter an email address first.')
       return
     }
 
-    showToast(`Invitation prepared for ${inviteEmail.trim()}`)
+    const subject = encodeURIComponent('Invitation to DFIN Authoring workspace')
+    const body = encodeURIComponent(
+      `Hello,\n\nYou have been invited to collaborate on the DFIN Authoring workspace.\n\nOpen the course workspace to review content, add feedback, and help prepare the course for publishing.\n\nThanks,\n${userName}`,
+    )
+
+    window.location.href = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`
+    showToast(`Invite email prepared for ${email}`)
     setInviteEmail('')
     closePanel()
   }
@@ -186,14 +212,14 @@ export function TopBar() {
             aria-expanded={isProfileMenuOpen}
             onClick={() => setIsProfileMenuOpen((value) => !value)}
           >
-            <span>FL</span>
+            <span>{userInitials}</span>
             <ChevronDown size={14} />
           </button>
           <div className={`profile-popover ${isProfileMenuOpen ? 'open' : ''}`}>
             <div className="profile-card">
-              <span className="profile-card-avatar">FL</span>
+              <span className="profile-card-avatar">{userInitials}</span>
               <div>
-                <strong>Fathima Lal</strong>
+                <strong>{userName}</strong>
                 <span>Course creator</span>
               </div>
             </div>
@@ -272,16 +298,16 @@ export function TopBar() {
 
       {isDrawerOpen ? (
         <aside className="module-drawer">
-          <button type="button" onClick={() => showToast('Authoring workspace is already open.')}>
+          <button type="button" onClick={() => openModulePanel('authoring')}>
             Authoring workspace
           </button>
-          <button type="button" onClick={() => showToast('Review queue has 3 items pending.')}>
+          <button type="button" onClick={() => openModulePanel('review')}>
             Review queue
           </button>
-          <button type="button" onClick={() => showToast('Published courses view is ready.')}>
+          <button type="button" onClick={() => openModulePanel('published')}>
             Published courses
           </button>
-          <button type="button" onClick={() => showToast('Asset library opened.')}>
+          <button type="button" onClick={() => openModulePanel('assets')}>
             Asset library
           </button>
         </aside>
@@ -336,17 +362,111 @@ export function TopBar() {
                 </ul>
               </>
             ) : null}
+            {activePanel === 'authoring' ? (
+              <>
+                <h2>Authoring workspace</h2>
+                <p>This workspace is active. Use the outline to create modules, edit page content, and add media or assessment blocks.</p>
+                <ul className="panel-list">
+                  <li>
+                    <CheckCircle2 size={17} />
+                    {searchableNodes.length} course items available.
+                  </li>
+                  <li>
+                    <CheckCircle2 size={17} />
+                    Current view mode: {viewMode}.
+                  </li>
+                </ul>
+              </>
+            ) : null}
+            {activePanel === 'review' ? (
+              <>
+                <h2>Review queue</h2>
+                <ul className="module-card-list">
+                  <li>
+                    <strong>Quiz</strong>
+                    <span>Needs reviewer assignment</span>
+                    <button type="button" onClick={() => showToast('Quiz moved to reviewer queue.')}>
+                      Queue
+                    </button>
+                  </li>
+                  <li>
+                    <strong>Videos</strong>
+                    <span>Media captions ready for review</span>
+                    <button type="button" onClick={() => showToast('Videos marked ready for review.')}>
+                      Queue
+                    </button>
+                  </li>
+                  <li>
+                    <strong>WYSIWYG Editor</strong>
+                    <span>Draft saved 1 minute ago</span>
+                    <button type="button" onClick={() => showToast('WYSIWYG Editor opened for review.')}>
+                      Open
+                    </button>
+                  </li>
+                </ul>
+              </>
+            ) : null}
+            {activePanel === 'published' ? (
+              <>
+                <h2>Published courses</h2>
+                <ul className="module-card-list">
+                  <li>
+                    <strong>DFIN Fundamentals</strong>
+                    <span>Published version 1.0</span>
+                    <button type="button" onClick={() => showToast('Opening published course preview.')}>
+                      Preview
+                    </button>
+                  </li>
+                  <li>
+                    <strong>Compliance Basics</strong>
+                    <span>Last published yesterday</span>
+                    <button type="button" onClick={() => showToast('Opening compliance course report.')}>
+                      Report
+                    </button>
+                  </li>
+                </ul>
+              </>
+            ) : null}
+            {activePanel === 'assets' ? (
+              <>
+                <h2>Asset library</h2>
+                <p>Reusable course media and supporting files for this authoring workspace.</p>
+                <ul className="module-card-list">
+                  <li>
+                    <strong>Intro-thumbnail.png</strong>
+                    <span>Image asset</span>
+                    <button type="button" onClick={() => showToast('Intro thumbnail selected.')}>
+                      Select
+                    </button>
+                  </li>
+                  <li>
+                    <strong>Module-overview.mp4</strong>
+                    <span>Video asset</span>
+                    <button type="button" onClick={() => showToast('Module video selected.')}>
+                      Select
+                    </button>
+                  </li>
+                  <li>
+                    <strong>Question-bank.csv</strong>
+                    <span>Assessment source</span>
+                    <button type="button" onClick={() => showToast('Question bank selected.')}>
+                      Select
+                    </button>
+                  </li>
+                </ul>
+              </>
+            ) : null}
             {activePanel === 'profile' ? (
               <>
                 <h2>Profile</h2>
                 <dl className="profile-details">
                   <div>
                     <dt>Name</dt>
-                    <dd>Fathima Lal</dd>
+                    <dd>{userName}</dd>
                   </div>
                   <div>
-                    <dt>Role</dt>
-                    <dd>Course creator</dd>
+                    <dt>Email</dt>
+                    <dd>{userEmail}</dd>
                   </div>
                   <div>
                     <dt>Workspace</dt>
@@ -419,7 +539,7 @@ export function TopBar() {
                     type="button"
                     onClick={() => {
                       closePanel()
-                      showToast('Logged out from this demo session.')
+                      logout()
                     }}
                   >
                     Log out
