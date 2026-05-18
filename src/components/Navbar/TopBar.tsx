@@ -13,10 +13,13 @@ import {
   User,
   UserPlus,
 } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { VIEW_MODES } from '../../constants/authoring'
 import { useAuthoringStore } from '../../store/useAuthoringStore'
 
 export function TopBar() {
+  const profileMenuRef = useRef<HTMLDivElement | null>(null)
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const isDrawerOpen = useAuthoringStore((state) => state.isDrawerOpen)
   const toggleDrawer = useAuthoringStore((state) => state.toggleDrawer)
   const viewMode = useAuthoringStore((state) => state.viewMode)
@@ -24,6 +27,26 @@ export function TopBar() {
   const theme = useAuthoringStore((state) => state.theme)
   const toggleTheme = useAuthoringStore((state) => state.toggleTheme)
   const isDark = theme === 'dark'
+
+  useEffect(() => {
+    if (!isProfileMenuOpen) {
+      return undefined
+    }
+
+    const closeProfileMenuOnOutsideClick = (event: PointerEvent) => {
+      const target = event.target
+
+      if (target instanceof Node && !profileMenuRef.current?.contains(target)) {
+        setIsProfileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', closeProfileMenuOnOutsideClick)
+
+    return () => {
+      document.removeEventListener('pointerdown', closeProfileMenuOnOutsideClick)
+    }
+  }, [isProfileMenuOpen])
 
   return (
     <header className="topbar">
@@ -47,12 +70,18 @@ export function TopBar() {
           <Bell size={18} />
         </button>
 
-        <div className="profile-menu">
-          <button className="avatar-button" type="button" aria-label="User options">
+        <div className="profile-menu" ref={profileMenuRef}>
+          <button
+            className="avatar-button"
+            type="button"
+            aria-label="User options"
+            aria-expanded={isProfileMenuOpen}
+            onClick={() => setIsProfileMenuOpen((value) => !value)}
+          >
             <span>FL</span>
             <ChevronDown size={14} />
           </button>
-          <div className="profile-popover">
+          <div className={`profile-popover ${isProfileMenuOpen ? 'open' : ''}`}>
             <div className="profile-card">
               <span className="profile-card-avatar">FL</span>
               <div>

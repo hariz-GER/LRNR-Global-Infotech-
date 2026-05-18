@@ -38,9 +38,12 @@ export function AuthoringLayout() {
     <div className="app-shell" data-theme={theme}>
       <TopBar />
       <div className={`workspace ${isTreePanelOpen ? '' : 'tree-panel-closed'}`}>
-        {isTreePanelOpen ? (
-          <TreePanel ref={treePanelRef} onClose={() => setIsTreePanelOpen(false)} />
-        ) : (
+        <TreePanel
+          ref={treePanelRef}
+          isOpen={isTreePanelOpen}
+          onClose={() => setIsTreePanelOpen(false)}
+        />
+        {!isTreePanelOpen ? (
           <button
             className="tree-panel-open-button"
             type="button"
@@ -50,7 +53,7 @@ export function AuthoringLayout() {
           >
             <PanelLeftOpen size={18} />
           </button>
-        )}
+        ) : null}
         <RichTextEditor />
       </div>
     </div>

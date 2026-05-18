@@ -5,18 +5,19 @@ import { useAuthoringStore } from '../../store/useAuthoringStore'
 import { TreeItem } from './TreeItem'
 
 type TreePanelProps = {
+  isOpen: boolean
   onClose: () => void
 }
 
 export const TreePanel = forwardRef<HTMLElement, TreePanelProps>(function TreePanel(
-  { onClose },
+  { isOpen, onClose },
   ref,
 ) {
   const tree = useAuthoringStore((state) => state.tree)
   const addNode = useAuthoringStore((state) => state.addNode)
 
   return (
-    <aside className="tree-panel" ref={ref}>
+    <aside className="tree-panel" ref={ref} aria-hidden={!isOpen}>
       <div className="tree-heading">
         <div>
           <span>DFIN</span>
